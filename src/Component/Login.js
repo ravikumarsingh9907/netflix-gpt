@@ -1,17 +1,15 @@
 import Header from "./Header";
 import heroBanner from "../Utils/hero-img.jpg";
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState } from "react";
 import { validateFormData } from "../Utils/Validate";
-import { createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
-import { addUser, removeUser } from "../Utils/userSlice";
+import { createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { addUser } from "../Utils/userSlice";
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
 
 const Login = () => {
     const [isSignup, setIsSignup] = useState(false);
     const [errorMessage, setErrorMessage] = useState(null);
     const dispatch = useDispatch();
-    const navigate = useNavigate();
 
     const email = useRef(null);
     const password = useRef(null);
@@ -21,19 +19,6 @@ const Login = () => {
     const handleFormRender = () => {
         setIsSignup(!isSignup);
     }
-
-    useEffect(() => {
-        onAuthStateChanged(auth, (user) => {
-            console.log(user);
-          if (user) {
-            dispatch(addUser({email: user.email, uid: user.uid}));
-            navigate("/browse")
-          } else {
-            dispatch(removeUser());
-            navigate("/");
-          }
-        });
-      }, []);
 
     const handleFormSubmit = () => {
         const message = validateFormData({email: email.current.value, password: password.current.value});
